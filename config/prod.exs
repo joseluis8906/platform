@@ -7,7 +7,7 @@ use Mix.Config
 config :platform, Platform.Repo,
   adapter: Ecto.Adapters.Postgres,
   url: System.get_env("DATABASE_URL"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || 10),
+  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10"),
   ssl: true
 # Note we also include the path to a cache manifest
 # containing the digested version of static files. This
@@ -15,7 +15,8 @@ config :platform, Platform.Repo,
 # which you should run after static files are built and
 # before starting your production server.
 config :platform, PlatformWeb.Endpoint,
-  url: [host: "jose-platform.herokuapp.com", port: 443],
+  http: [:inet6, port: System.get_env("PORT") || 4000],
+  url: [scheme: "https", host: "jose-platform.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: Map.fetch!(System.get_env(), "SECRET_KEY_BASE")
